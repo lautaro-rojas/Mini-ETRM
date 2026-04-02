@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: minietrm_db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SuperStrongPassword123! # Contraseña de ejemplo
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "SuperStrongPassword123!", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: minietrm_api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Sobreescribimos la ConnectionString para que apunte al contenedor 'sqlserver'
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=MiniETRM_Db;User Id=sa;Password=SuperStrongPassword123!;TrustServerCertificate=True;
+    depends_on:
+      sqlserver:
+        condition: service_healthy
