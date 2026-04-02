@@ -16,9 +16,7 @@ services:
       retries: 10
 
   api:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: lautarorojas/minietrm-api:latest
     container_name: minietrm_api
     ports:
       - "8080:8080"

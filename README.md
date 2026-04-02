@@ -46,11 +46,11 @@ The project is fully Dockerized. You don't need to install the .NET SDK or confi
 * Docker Desktop installed.
 
 ### Steps:
-1. Clone the repository.
+1. Clone the repository or download only the `docker-compose.yml` file.
 2. Open a terminal in the project root (where the `docker-compose.yml` file is located).
 3. Run the following command:
     ```bash 
-    docker-compose up --build -d
+    docker-compose up -d
 4. Wait a few seconds for the database to initialize.
 5. Navigate to http://localhost:8080/scalar to interact with the endpoints:
 
@@ -114,11 +114,11 @@ El proyecto está completamente dockerizado. No necesitas instalar el SDK de .NE
 
 ### Pasos:
 
-1. Clonar el repositorio.
+1. Clonar el repositorio o descargar solo el archivo `docker-compose.yml`.
 2. Abrir una terminal en la raíz del proyecto (donde se encuentra el archivo `docker-compose.yml`).
 3. Ejecutar el siguiente comando:
    ```bash
-   docker-compose up --build -d
+   docker-compose up -d
 4. Esperar unos segundos a que la base de datos se inicialice.
 5. Navegar a http://localhost:8080/scalar para interactuar con los endpoints:
 

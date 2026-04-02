@@ -1,19 +1,19 @@
 # 1. Base image for execution
-FROM mcr.microsoft.com/dotnet/aspnet:10 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 8080
 
 # 2. Base image for compilation
-FROM mcr.microsoft.com/dotnet/sdk:10 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # 3. Copy projects and restore packages
-COPY ["Mini-ETRM.sln", "./"]
+COPY ["Mini-ETRM.slnx", "./"]
 COPY ["src/Mini-ETRM.Domain/Mini-ETRM.Domain.csproj", "src/Mini-ETRM.Domain/"]
 COPY ["src/Mini-ETRM.Application/Mini-ETRM.Application.csproj", "src/Mini-ETRM.Application/"]
 COPY ["src/Mini-ETRM.Infrastructure/Mini-ETRM.Infrastructure.csproj", "src/Mini-ETRM.Infrastructure/"]
 COPY ["src/Mini-ETRM.WebApi/Mini-ETRM.WebApi.csproj", "src/Mini-ETRM.WebApi/"]
-RUN dotnet restore "Mini-ETRM.sln"
+RUN dotnet restore "Mini-ETRM.slnx"
 
 # 4. Copy the rest of the code and build
 COPY . .
@@ -29,3 +29,11 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Mini-ETRM.WebApi.dll"]
+
+# To build the image, run:
+# Open your terminal and run this command to connect your local Docker with your Docker Hub account:
+    # docker login
+# Compile the Docker image and tag it with your Docker Hub username:
+    # docker build -t lautarorojas/minietrm-api:latest .
+# Push the image to Docker Hub:
+    # docker push lautarorojas/minietrm-api:latest
