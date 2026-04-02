@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Mini_ETRM.Infrastructure.Data;
+using Mini_ETRM.Application.Commands;
+using Mini_ETRM.Domain.Interfaces;
+using Mini_ETRM.Infrastructure.Repositories;
+using Mini_ETRM.Infrastructure.Services;
+using Mini_ETRM.Infrastructure.Cahing;
 
 var builder = WebApplication.CreateBuilder(args);
-
-#region Controllers
-builder.Services.AddControllers();
-#endregion
 
 #region OpenAPI + Scalar
 // dotnet add package Microsoft.OpenApi
@@ -57,16 +58,36 @@ builder.Services.AddOpenApi(options =>
 });
 #endregion
 
-#region Database Context
+// 1. Configurar Base de Datos (SQL Server)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-#endregion
 
-#region Services
-//builder.Services.AddScoped<Mini-ETRM.Application.Services.UserService>();
-#endregion
+// 2. Registrar MediatR (Capa de Aplicación)
+// Le indicamos a MediatR que escanee el assembly donde está ExecuteTradeCommandHandler
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssemblyContaining<ExecuteTradeCommandHandler>());
+
+// 3. Registrar Servicios de Dominio / Infraestructura
+// ITradeRepository es Scoped porque DbContext por defecto es Scoped (una instancia por request HTTP)
+builder.Services.AddScoped<ITradeRepository, TradeRepository>();
+
+// IMarketDataCache DEBE ser Singleton. Todos los requests HTTP y el BackgroundService 
+// deben compartir exactamente la misma instancia de memoria.
+builder.Services.AddSingleton<IMarketDataCache, MarketDataCache>();
+
+// 4. Registrar el Simulador de Mercado (Background Service)
+builder.Services.AddHostedService<MarketDataSimulatorService>();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
+
+// Crear la base de datos automáticamente al arrancar (Solo para la PoC)
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -78,7 +99,6 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline.
-app.UseAuthentication();
 app.UseAuthorization();
 app.UseRouting();
 app.UseHttpsRedirection();
