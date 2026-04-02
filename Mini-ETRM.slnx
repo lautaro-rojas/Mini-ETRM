@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Mini-ETRM.Application/Mini-ETRM.Application.csproj" />
+    <Project Path="src/Mini-ETRM.Domain/Mini-ETRM.Domain.csproj" />
+    <Project Path="src/Mini-ETRM.Infrastructure/Mini-ETRM.Infrastructure.csproj" />
+    <Project Path="src/Mini-ETRM.WebApi/Mini-ETRM.WebApi.csproj" />
+  </Folder>
+</Solution>
