@@ -29,11 +29,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Mini-ETRM.WebApi.dll"]
-
-# To build the image, run:
-# Open your terminal and run this command to connect your local Docker with your Docker Hub account:
-    # docker login
-# Compile the Docker image and tag it with your Docker Hub username:
-    # docker build -t lautarorojas/minietrm-api:latest .
-# Push the image to Docker Hub:
-    # docker push lautarorojas/minietrm-api:latest
