@@ -44,8 +44,9 @@ public class TradesController : ControllerBase
             var pnlDto = await _mediator.Send(query);
             return Ok(pnlDto);
         }
-        catch (Exception ex) // En un entorno real, atraparíamos una NotFoundException específica
+        catch (Exception ex)
         {
+            // In a real case, it would be ideal to handle specific exceptions (e.g., NotFoundException) to return more precise HTTP codes
             return NotFound(new { error = ex.Message });
         }
     }

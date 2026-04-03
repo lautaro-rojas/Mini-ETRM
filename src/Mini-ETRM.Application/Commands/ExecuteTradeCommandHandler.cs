@@ -17,7 +17,7 @@ namespace Mini_ETRM.Application.Commands
 
         public async Task<Guid> Handle(ExecuteTradeCommand request, CancellationToken cancellationToken)
         {
-            // 1. Obtener el precio exacto de este milisegundo desde la caché O(1)
+            // Get the exact price of this millisecond from the cache
             var latestTick = _marketDataCache.GetLatestTick(request.Commodity);
 
             if (latestTick == null)
@@ -25,17 +25,17 @@ namespace Mini_ETRM.Application.Commands
                 throw new InvalidOperationException($"No hay datos de mercado disponibles para {request.Commodity}");
             }
 
-            // 2. Crear la entidad de Dominio
+            // Create the Domain entity
             var trade = new Trade(
                 id: Guid.NewGuid(),
                 commodity: request.Commodity,
                 type: request.Type,
                 volume: request.Volume,
-                executionPrice: latestTick.Price, // Precio tomado de la caché
+                executionPrice: latestTick.Price, // Gets the exact price of this millisecond from the cache
                 timestamp: DateTimeOffset.UtcNow
             );
 
-            // 3. Persistir en base de datos
+            // Persist in database
             await _tradeRepository.AddAsync(trade, cancellationToken);
 
             return trade.Id;

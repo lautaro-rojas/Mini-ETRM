@@ -1,12 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mini_ETRM.Domain.Entities;
 
-/*  
-For migrations run in the terminal from crc:
-    1. cd Mini_ETRM.Infrastructure dotnet ef migrations add Initial -o Data/Migrations --startup-project ../Mini_ETRM.WebApi
-    2. dotnet ef database update -p src/Mini_ETRM.Infrastructure -s src/Mini_ETRM.WebApi
-*/
-
 namespace Mini_ETRM.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext

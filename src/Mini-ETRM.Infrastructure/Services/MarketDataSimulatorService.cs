@@ -12,7 +12,8 @@ namespace Mini_ETRM.Infrastructure.Services
         private readonly ILogger<MarketDataSimulatorService> _logger;
         private readonly Random _random = new();
 
-        // Precios base iniciales
+        // Prices are initialized at a reasonable level for WTI and Brent.
+        // In a real scenario, these could come from an external source or be set to more dynamic initial values.
         private decimal _currentWtiPrice = 75.00m;
         private decimal _currentBrentPrice = 80.00m;
 
@@ -26,10 +27,10 @@ namespace Mini_ETRM.Infrastructure.Services
         {
             _logger.LogInformation("Market Data Simulator is starting.");
 
-            // Inicializamos la caché antes de empezar a fluctuar
+            // Initialize the cache with the starting prices before we start fluctuating
             UpdatePrices();
 
-            // Loop de alta frecuencia (500ms)
+            // Every 500ms we update the prices and store them in the cache
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(500, stoppingToken);
@@ -39,7 +40,7 @@ namespace Mini_ETRM.Infrastructure.Services
 
         private void UpdatePrices()
         {
-            // Random Walk: El precio cambia entre -0.25 y +0.25 centavos por tick
+            // The price changes between -0.25 and +0.25 cents per tick
             decimal wtiChange = (decimal)(_random.NextDouble() * 0.5 - 0.25);
             decimal brentChange = (decimal)(_random.NextDouble() * 0.5 - 0.25);
 
@@ -52,8 +53,8 @@ namespace Mini_ETRM.Infrastructure.Services
             _cache.UpdateTick(wtiTick);
             _cache.UpdateTick(brentTick);
 
-            // Opcional: Descomentar para ver el spam en consola, ideal para debug.
-            _logger.LogDebug($"New Tick -> WTI: {_currentWtiPrice} | Brent: {_currentBrentPrice}");
+            // Uncomment to see the spam in console, ideal for debugging.
+            //_logger.LogInformation($"New Tick -> WTI: {_currentWtiPrice} | Brent: {_currentBrentPrice}");
         }
     }
 }

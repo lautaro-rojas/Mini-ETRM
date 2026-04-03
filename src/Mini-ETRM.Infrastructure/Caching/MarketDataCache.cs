@@ -7,12 +7,12 @@ namespace Mini_ETRM.Infrastructure.Cahing
 {
     public class MarketDataCache : IMarketDataCache
     {
-        // ConcurrentDictionary maneja los bloqueos (locks) internamente por nosotros
+        // ConcurrentDictionary handles locking internally for us, ensuring thread safety
         private readonly ConcurrentDictionary<Commodity, MarketTick> _latestTicks = new();
 
         public void UpdateTick(MarketTick tick)
         {
-            // AddOrUpdate asegura que siempre tengamos el último valor sin race conditions
+            // AddOrUpdate ensures we always have the latest value without race conditions
             _latestTicks.AddOrUpdate(tick.Commodity, tick, (_, _) => tick);
         }
 
@@ -22,5 +22,4 @@ namespace Mini_ETRM.Infrastructure.Cahing
             return tick;
         }
     }
-
 }

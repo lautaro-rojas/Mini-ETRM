@@ -23,7 +23,7 @@ public class MarketDataController : ControllerBase
 
         if (wti == null || brent == null)
         {
-            return StatusCode(503, new { error = "El simulador de mercado aún no ha generado precios." });
+            return StatusCode(503, new { error = "The market simulator has not generated prices yet." });
         }
 
         return Ok(new

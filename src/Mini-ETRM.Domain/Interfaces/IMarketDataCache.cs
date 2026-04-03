@@ -5,14 +5,10 @@ namespace Mini_ETRM.Domain.Interfaces
 {
     public interface IMarketDataCache
     {
-        /// <summary>
-        /// Guarda el último tick del simulador. Thread-safe.
-        /// </summary>
+        // Stores the latest tick from the simulator. Thread-safe.
         void UpdateTick(MarketTick tick);
 
-        /// <summary>
-        /// Obtiene el último tick en O(1) para cruzarlo con el Trade.
-        /// </summary>
+        // Returns the latest tick to cross it with the Trade.
         MarketTick? GetLatestTick(Commodity commodity);
     }
 }

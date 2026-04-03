@@ -3,7 +3,7 @@ using Mini_ETRM.Domain.Enums;
 
 namespace Mini_ETRM.Application.Commands
 {
-    // El comando devuelve el Guid del Trade generado
+    // The command returns the Guid of the generated Trade
     public record ExecuteTradeCommand(
         Commodity Commodity,
         TradeType Type,
